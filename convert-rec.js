@@ -6,10 +6,8 @@ const submitButton = document.getElementById('submit-button');
 function setState(state) {
     submitButton.disabled = (!recFileInput.files.length) || state;
 
-    if (!state) {
-        state = "Konvertieren!";
-    }
-    submitButton.value = state;
+    console.log('Status:', state ? state : 'Bereit!');
+    submitButton.value = state ? state : 'Konvertieren!';
 }
 
 function readFile(file) {
