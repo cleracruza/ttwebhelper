@@ -1,9 +1,8 @@
-const form = document.getElementById('main-form');
-const recFileInput = document.getElementById('rec-file-input');
-const formatSelect = document.getElementById('format');
-const submitButton = document.getElementById('submit-button');
+var recFileInput;
 
 function setState(state) {
+    const submitButton = document.getElementById('submit-button');
+
     submitButton.disabled = (!recFileInput.files.length) || state;
 
     console.log('Status:', state ? state : 'Bereit!');
@@ -99,17 +98,9 @@ function downloadBuffer(name, format, bits) {
   setState();
 };
 
-recFileInput.onchange = function(event) {
-    setState();
-}
-recFileInput.oninput = onchange;
-document.addEventListener ("DOMContentLoaded", () => {
-    recFileInput.onchange();
-});
-
-form.onsubmit = function(event) {
+function formSubmit(event) {
   const file = recFileInput.files[0];
-  const format = formatSelect.value;
+  const format = document.getElementById('format').value;
   var name = file.name + '.' + format;
 
   function convert() {
@@ -139,3 +130,19 @@ form.onsubmit = function(event) {
   event.stopPropagation();
   event.preventDefault();
 }
+
+function boot() {
+    recFileInput = document.getElementById('rec-file-input');
+    recFileInput.onchange = function(event) {
+        setState();
+    }
+    recFileInput.oninput = onchange;
+    recFileInput.onchange();
+
+    const form = document.getElementById('main-form');
+    form.onsubmit = formSubmit;
+}
+
+document.addEventListener ("DOMContentLoaded", () => {
+    boot();
+});
