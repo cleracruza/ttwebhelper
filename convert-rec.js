@@ -20,6 +20,12 @@ function raiseError(error) {
     setState();
 };
 
+function assert(check, message) {
+  if (!check) {
+      throw Error(message);
+  }
+}
+
 function readFile(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -44,6 +50,9 @@ function convertWavToMp3Bits(array) {
   }
 
   const header = new lamejs.WavHeader.readHeader(new DataView(array.buffer));
+  assert(header.channels, "Konnte Kanalinformationen nicht lesen");
+  assert(header.channels == 1, "Dateien mit " + header.channels + " Kanälen werden nicht unterstützt");
+
   const waveform = new Int16Array(array.buffer, header.dataOffset);
 
   const encoder = new lamejs.Mp3Encoder(header.channels, header.sampleRate, 128);
