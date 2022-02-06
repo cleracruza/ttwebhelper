@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+  <title>REC converter</title>
+</head>
+<body>
+  <form action="" id="main-form">
+    <div>
+      <label for="rec-file-input">REC Datei:</label>
+      <input type="file" id="rec-file-input" name="rec-file-input" accept=".rec">
+    </div>
+    <div>
+      <input type="submit"></input>
+    </div>
+  </form>
+
+  <script>
+const form = document.getElementById('main-form');
+const recFileInput = document.getElementById('rec-file-input');
+
+function readFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = (event) => {
+      resolve(new Uint8Array(reader.result));
+    }
+    reader.readAsArrayBuffer(file);
+  });
+};
+
+function convertToWav(array) {
+  return array.map(x => (x ^ 0x6A));
+};
+
+function downloadBuffer(name, array) {
+  const blob = new File([array.buffer], name, {type:'audio/wav'});
+  const url = URL.createObjectURL(blob);
+
+  const element = document.createElement('a');
+  element.href = url;
+  element.download = name;
+  element.style = 'display:none';
+
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+
+  URL.revokeObjectURL(url);
+};
+
+form.onsubmit = function(event) {
+  const file = recFileInput.files[0];
+  var name = file.name;
+
+  readFile(file).then(convertToWav).then((buffer) => downloadBuffer(name, buffer));
+  event.stopPropagation();
+  event.preventDefault();
+}
+  </script>
+
+</body>
+</html>
