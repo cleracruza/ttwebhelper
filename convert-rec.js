@@ -37,6 +37,7 @@ function readFile(file) {
 };
 
 function convertRecToWav(array) {
+  assert(array[0] == 56 && array[1] == 35 && array[2] == 44 && array[3] == 44, "Datei wurde nicht als REC Datei erkannt");
   return array.map(x => (x ^ 0x6A));
 };
 
