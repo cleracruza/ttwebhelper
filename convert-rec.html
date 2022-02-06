@@ -15,6 +15,11 @@
     </div>
   </form>
 
+  <h4>Danksagung</h4>
+  <p>Zur MP3 Konvertierung wird die <a href="https://github.com/zhuker/lamejs">lamejs</a> Bibliothek benutzt (<a href="https://github.com/zhuker/lamejs/blob/master/LICENSE">Lizenz</a>, <a href="http://lame.sourceforge.net/">LAME</a>).</p>
+
+  </p>
+  <script src="lame.all.js"></script>
   <script>
 const form = document.getElementById('main-form');
 const recFileInput = document.getElementById('rec-file-input');
@@ -29,12 +34,47 @@ function readFile(file) {
   });
 };
 
-function convertToWav(array) {
+function convertRecToWav(array) {
   return array.map(x => (x ^ 0x6A));
 };
 
-function downloadBuffer(name, array) {
-  const blob = new File([array.buffer], name, {type:'audio/wav'});
+function convertWavToMp3Bits(array) {
+  var ret = [];
+
+  function storeIfNotEmpty(buffer) {
+    if (buffer.length > 0) {
+      ret.push(new Uint8Array(buffer));
+    }
+  }
+
+  const header = new lamejs.WavHeader.readHeader(new DataView(array.buffer));
+  const waveform = new Int16Array(array.buffer, header.dataOffset);
+
+  const encoder = new lamejs.Mp3Encoder(header.channels, header.sampleRate, 128);
+  const blockSize = 1152;
+
+  for (var i = 0; i < waveform.length; i += blockSize) {
+    var block = waveform.subarray(i, i + blockSize);
+    storeIfNotEmpty(encoder.encodeBuffer(block));
+  }
+  storeIfNotEmpty(encoder.flush());
+
+  return ret;
+};
+
+function convertWavToWavBits(array) {
+  return [array.buffer];
+};
+
+function convertWavToBits(format) {
+  if (format == 'mp3') {
+    return convertWavToMp3Bits;
+  }
+  return convertWavToWavBits;
+};
+
+function downloadBuffer(name, format, bits) {
+  const blob = new File(bits, name, {type:'audio/' + format});
   const url = URL.createObjectURL(blob);
 
   const element = document.createElement('a');
@@ -53,9 +93,10 @@ function downloadBuffer(name, array) {
 
 form.onsubmit = function(event) {
   const file = recFileInput.files[0];
-  var name = file.name;
+  const format = 'wav';
+  var name = file.name + '.' + format;
 
-  readFile(file).then(convertToWav).then((buffer) => downloadBuffer(name, buffer));
+  readFile(file).then(convertRecToWav).then(convertWavToBits(format)).then((buffer) => downloadBuffer(name, format, buffer));
   event.stopPropagation();
   event.preventDefault();
 }

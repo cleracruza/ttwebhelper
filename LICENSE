@@ -1,2 +1,4 @@
 All files in this repository are under the ttbox license (see
-`LICENSE.ttbox`).
+`LICENSE.ttbox`), except:
+
+* `lame.all.js` is under the LGPL-3 (see `LICENSE.lamejs`)
