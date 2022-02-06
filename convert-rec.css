@@ -1,0 +1,25 @@
+form {
+    width: 30em;
+    background-color :#9ef2f9;
+    border: 2px solid #35c8ff;
+}
+
+form div {
+    display: flex;
+    margin: 0.2rem 0.5rem;
+}
+
+form label {
+    display: block;
+    width: 30%;
+}
+
+input[type="submit"] {
+    margin-left: 30%;
+    margin-right: auto;
+    margin-top: 1rem;
+}
+
+h4 {
+    margin-top: 5rem;
+}

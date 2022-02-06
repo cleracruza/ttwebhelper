@@ -2,30 +2,36 @@
 <html lang="en">
 <head>
   <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-  <title>REC converter</title>
+  <title>REC Konverter</title>
+  <link rel="stylesheet" href="convert-rec.css" type="text/css">
 </head>
 <body>
+  <h1>TipToi® REC -&gt; WAV/MP3 Konverter</h1>
+  <p>Wenn du einen TipToi® Stift mit Aufnahmenfunktion hast, kannst du mit diesem Konverter die Aufnahmen deines Stiftes (REC Dateien) in WAV/MP3 Dateien umwandeln.</p>
+  <p>Deine REC Dateien werden nicht ins Internet geladen, die Konvertierung passiert direkt im Browser über JavaScript.</p>
   <form action="" id="main-form">
     <div>
-      <label for="rec-file-input">REC Datei:</label>
+      <label for="rec-file-input">REC Datei</label>
       <input type="file" id="rec-file-input" name="rec-file-input" accept=".rec">
     </div>
     <div>
-      <label for="rec-file-input">Zielformat:</label>
+      <label for="rec-file-input">Zielformat</label>
       <select name="format" id="format">
         <option value="wav" selected>WAV Datei (verlustlos)</option>
         <option value="mp3">MP3 Datei (128kbit)</option>
       </select>
     </div>
     <div>
-      <input type="submit"></input>
+      <input type="submit" value="Konvertieren!"></input>
     </div>
   </form>
 
-  <h4>Danksagung</h4>
-  <p>Zur MP3 Konvertierung wird die <a href="https://github.com/zhuker/lamejs">lamejs</a> Bibliothek benutzt (<a href="https://github.com/zhuker/lamejs/blob/master/LICENSE">Lizenz</a>, <a href="http://lame.sourceforge.net/">LAME</a>).</p>
-
-  </p>
+  <h4>Rechtliches</h4>
+  <ul>
+    <li><a href="https://www.tiptoi.de/">TipToi®</a> ist eine Marke der <a href="https://www.ravensburger.de/">Ravensburger AG</a>.</li>
+    <li>Zur MP3 Konvertierung wird die <a href="https://github.com/zhuker/lamejs">lamejs</a> Bibliothek benutzt (<a href="https://github.com/zhuker/lamejs/blob/master/LICENSE">Lizenz</a>, <a href="http://lame.sourceforge.net/">LAME</a>).</li>
+    <!-- IMPRESSUM-LI -->
+  </ul>
   <script src="lame.all.js"></script>
   <script src="convert-rec.js"></script>
 </body>
