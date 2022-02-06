@@ -11,6 +11,13 @@
       <input type="file" id="rec-file-input" name="rec-file-input" accept=".rec">
     </div>
     <div>
+      <label for="rec-file-input">Zielformat:</label>
+      <select name="format" id="format">
+        <option value="wav" selected>WAV Datei (verlustlos)</option>
+        <option value="mp3">MP3 Datei (128kbit)</option>
+      </select>
+    </div>
+    <div>
       <input type="submit"></input>
     </div>
   </form>
@@ -23,6 +30,7 @@
   <script>
 const form = document.getElementById('main-form');
 const recFileInput = document.getElementById('rec-file-input');
+const formatSelect = document.getElementById('format');
 
 function readFile(file) {
   return new Promise((resolve, reject) => {
@@ -93,7 +101,7 @@ function downloadBuffer(name, format, bits) {
 
 form.onsubmit = function(event) {
   const file = recFileInput.files[0];
-  const format = 'wav';
+  const format = formatSelect.value;
   var name = file.name + '.' + format;
 
   readFile(file).then(convertRecToWav).then(convertWavToBits(format)).then((buffer) => downloadBuffer(name, format, buffer));
