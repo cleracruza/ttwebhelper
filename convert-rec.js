@@ -98,10 +98,19 @@ function downloadBuffer(name, format, bits) {
   setState();
 };
 
+function getDownloadName(originalName, format) {
+    var name = originalName;
+    if (name.substring(name.length - 4) == '.rec') {
+        name = name.substring(0, name.length - 4);
+    }
+    name += '.' + format;
+    return name;
+}
+
 function formSubmit(event) {
   const file = recFileInput.files[0];
   const format = document.getElementById('format').value;
-  var name = file.name + '.' + format;
+  var name = getDownloadName(file.name, format);
 
   function convert() {
       setState('Konvertierung läuft ...');
