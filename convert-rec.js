@@ -95,7 +95,10 @@ form.onsubmit = function(event) {
   function convert() {
       setState('Konvertierung läuft ...');
 
-      readFile(file).then(convertRecToWav).then(convertWavToBits(format)).then((buffer) => downloadBuffer(name, format, buffer));
+      readFile(file)
+          .then(convertRecToWav)
+          .then(convertWavToBits(format))
+          .then((buffer) => downloadBuffer(name, format, buffer));
   }
 
   if (format == 'mp3' && (typeof lamejs === 'undefined')) {
