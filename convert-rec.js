@@ -36,7 +36,9 @@ function readFile(file) {
 };
 
 function convertRecToWav(array) {
+  // 65, 35, 44, 44 correspond to the "RIFF" WAV header in REC files
   assert(array[0] == 56 && array[1] == 35 && array[2] == 44 && array[3] == 44, "Datei wurde nicht als REC Datei erkannt");
+  // the 0x6A is from https://github.com/entropia/tip-toi-reveng/wiki/REC-file-format
   return array.map(x => (x ^ 0x6A));
 };
 
