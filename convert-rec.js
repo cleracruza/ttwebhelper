@@ -1,6 +1,7 @@
 const form = document.getElementById('main-form');
 const recFileInput = document.getElementById('rec-file-input');
 const formatSelect = document.getElementById('format');
+const submitButton = document.getElementById('submit-button');
 
 function readFile(file) {
   return new Promise((resolve, reject) => {
@@ -68,6 +69,14 @@ function downloadBuffer(name, format, bits) {
 
   URL.revokeObjectURL(url);
 };
+
+recFileInput.onchange = function(event) {
+    submitButton.disabled = ! recFileInput.files.length;
+}
+recFileInput.oninput = onchange;
+document.addEventListener ("DOMContentLoaded", () => {
+    recFileInput.onchange();
+});
 
 form.onsubmit = function(event) {
   const file = recFileInput.files[0];
