@@ -92,9 +92,25 @@ form.onsubmit = function(event) {
   const format = formatSelect.value;
   var name = file.name + '.' + format;
 
-  setState('Konvertierung läuft ...');
+  function convert() {
+      setState('Konvertierung läuft ...');
 
-  readFile(file).then(convertRecToWav).then(convertWavToBits(format)).then((buffer) => downloadBuffer(name, format, buffer));
+      readFile(file).then(convertRecToWav).then(convertWavToBits(format)).then((buffer) => downloadBuffer(name, format, buffer));
+  }
+
+  if (format == 'mp3' && (typeof lamejs === 'undefined')) {
+      const url = 'lame.all.js';
+
+      setState('Lade ' + url + ' ...');
+
+      var script = document.createElement('script');
+      script.onload = convert;
+      script.src = url;
+      document.head.appendChild(script);
+  } else {
+      convert();
+  };
+
   event.stopPropagation();
   event.preventDefault();
 }
