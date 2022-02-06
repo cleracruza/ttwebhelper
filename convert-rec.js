@@ -10,6 +10,16 @@ function setState(state) {
     submitButton.value = state ? state : 'Konvertieren!';
 }
 
+function raiseError(error) {
+    var message = error;
+    if (typeof(error) === 'object' && 'type' in error && typeof(error.target) === 'object' && error.target.tagName) {
+        message = 'Konnte script ' + error.target.src + ' nicht laden';
+    }
+    console.log(error);
+    window.alert(message);
+    setState();
+};
+
 function readFile(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -98,7 +108,8 @@ form.onsubmit = function(event) {
       readFile(file)
           .then(convertRecToWav)
           .then(convertWavToBits(format))
-          .then((buffer) => downloadBuffer(name, format, buffer));
+          .then((buffer) => downloadBuffer(name, format, buffer))
+          .catch((error) => raiseError(error));
   }
 
   if (format == 'mp3' && (typeof lamejs === 'undefined')) {
@@ -108,6 +119,7 @@ form.onsubmit = function(event) {
 
       var script = document.createElement('script');
       script.onload = convert;
+      script.onerror = raiseError;
       script.src = url;
       document.head.appendChild(script);
   } else {
