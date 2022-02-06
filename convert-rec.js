@@ -3,6 +3,15 @@ const recFileInput = document.getElementById('rec-file-input');
 const formatSelect = document.getElementById('format');
 const submitButton = document.getElementById('submit-button');
 
+function setState(state) {
+    submitButton.disabled = (!recFileInput.files.length) || state;
+
+    if (!state) {
+        state = "Konvertieren!";
+    }
+    submitButton.value = state;
+}
+
 function readFile(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -68,10 +77,12 @@ function downloadBuffer(name, format, bits) {
   document.body.removeChild(element);
 
   URL.revokeObjectURL(url);
+
+  setState();
 };
 
 recFileInput.onchange = function(event) {
-    submitButton.disabled = ! recFileInput.files.length;
+    setState();
 }
 recFileInput.oninput = onchange;
 document.addEventListener ("DOMContentLoaded", () => {
@@ -82,6 +93,8 @@ form.onsubmit = function(event) {
   const file = recFileInput.files[0];
   const format = formatSelect.value;
   var name = file.name + '.' + format;
+
+  setState('Konvertierung läuft ...');
 
   readFile(file).then(convertRecToWav).then(convertWavToBits(format)).then((buffer) => downloadBuffer(name, format, buffer));
   event.stopPropagation();
